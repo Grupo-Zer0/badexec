@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ping</title>
+</head>
+<body>
+  <h1>Ping</h1>
+  <p>Ingresa una IP para probar su conexion:</p>
+  <form>
+    <input type="text" placeholder="Ingresa una IP">
+    <button type="submit">Ping</button>
+  </form>
+  <p id="response"></p>
+  <script>
+    //make a POST request to /ping, sending the IP address
+    //display the response in the console
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('response').innerText = "Espera un momento...";
+      const ip = form.querySelector('input').value;
+      const response = await fetch('/ping', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ip }),
+      });
+      const data = await response.json();
+      console.log(data);
+      document.getElementById('response').innerText = "";
+      document.getElementById('response').innerText = data.stdout;
+    });
+  </script>
+  
+</body>
+</html>
