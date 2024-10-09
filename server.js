@@ -7,7 +7,7 @@ app.use(express.static('public'));
 app.use(express.json()); //api clients, fetch, axios, etc
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.sendFile(__dirname + '/public/figlet.html');
     });
 
 app.post("/ping", (req, res) => {
@@ -18,6 +18,17 @@ app.post("/ping", (req, res) => {
     }
     **/
     exec(`ping -c 4 ${ip}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return;
+        }
+        res.json({ stdout, stderr });
+    });
+});
+
+app.post("/figlet", (req, res) => {
+    const { texto } = req.body;
+    exec(`figlet ${texto}`, (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`);
             return;
